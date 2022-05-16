@@ -64,7 +64,10 @@ However, here we indicate some of the most relevant observations:
    4. utm_src and utm_med are missing in the exact same cases.
 
 ### Model selection
-The conclusions of the model selection can be found in the [model selection notebook](./notebooks/model_selection.ipynb). Here
+**Warning**: For computational reasons, a *random sample* consisting of 15% of the total available user_id's has
+been used. In future work, the model will be run in parallel using pySpark. 
+
+The conclusions of the model selection -- including the feature engineering section -- can be found in the [model selection notebook](./notebooks/model_selection.ipynb). Here
 we provide an overview of the approach and the steps performed. 
 #### Hierarchical time series
 Regarding the model selection, and given the time constraints, it has been concluded that the best approach
@@ -80,7 +83,7 @@ attempt to find latent connections (e.g, hierarchies) which, in the case above a
 
 In our case, the model makes predictions for the bottom layers, and then uses the [variance weighted least squares
 (WLS)](https://scikit-hts.readthedocs.io/en/latest/hts.html#hts.functions.optimal_combination) reconciliation method [2] to account for the
-interactions within the hierarchies. All of this is implemented using the [sci-kit HTS](https://scikit-hts.readthedocs.io/en/latest/)
+interactions within the hierarchies. All of this is implemented using the [pyHTS](https://angelpone.github.io/pyhts/index.html)
 package, and is known to be the *state-of-the-art* in demand forecasting, outside neural network approaches.
 
 #### Train and validation dataset construction
@@ -91,9 +94,11 @@ In order to choose the train and validation data, a forward validation is perfor
 Figure 2. *Forward cross-validation for time series*
 
 In our case, we perform two folds:
-1. The first one uses all the dates up to 180 days before the last date as the train set and the next 90 days as the validation
+1. The first one uses all the dates up to 270 days before the last date as the train set and the next 90 days as the validation
 set. 
-2. The second one uses all the dates up to 90 days prior to the last date, and the next 90 days as the validation. 
+2. The second one uses all the dates up to 180 days prior to the last date, and the next 90 days as the validation. 
+3. The last fold uses all the dates up to the 90 days prior to the last date, and forecasts
+the next 90 days. 
 
 Once the validation process is complete, the scores are plotted in a box diagram. The metric used in this project has been
 the *[mean absolute scaled error (MASE)](https://en.wikipedia.org/wiki/Mean_absolute_scaled_error)* [1]. This consists on dividing
@@ -111,6 +116,10 @@ dependent on the user.
 #### Other ML models
 As explained above, large companies usually generate a data-frame as the one explained in the last sub-section, 
 and feed it directly into a large neural network. In the future we would like to compare the results with our model. 
+#### Usage of "Fable" instead of pyHTS
+Unfortunately, and due to time constraints, it has not been possible to try the model using the
+R package "Fable", which has many functionalities regarding time series forecasting, among them hierarchical time series 
+forecasting algorithms. 
 
 ### Business applications
 One of the main applications of this forecasting algorithm -- that is, the quarterly monetary value of each user -- can 
