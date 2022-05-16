@@ -10,12 +10,17 @@ The problem statement is opened on purpose since one of the objectives of this c
 The analysis can be done either in Python or R, although the first is preferred. The results can be presented in any friendly format (Jupyter, R markdown, slides…). Whenever possible, show plots and tables that support your conclusions.
 
 #### Key points:
-- Exploratory analysis
-- Design of the training and evaluation procedures to build the predictive model
-- ETL and feature engineering to build the tables that will be used as input to the predictive model
-- Implementation in a production scenario
-- Performance evaluation metrics and baselines to be considered
-- Business case
+[X] Exploratory analysis
+
+[X] Design of the training and evaluation procedures to build the predictive model 
+
+[ ] ETL and feature engineering to build the tables that will be used as input to the predictive model
+
+[X] Implementation in a production scenario
+
+[X] Performance evaluation metrics and baselines to be considered
+
+[ ] Business case
 
 The provided dataset includes two tables:
 - User table (“sds_users.csv”): All the information contained in this table is generated when the users are registered/created.
