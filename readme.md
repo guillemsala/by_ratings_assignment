@@ -64,6 +64,8 @@ However, here we indicate some of the most relevant observations:
    4. utm_src and utm_med are missing in the exact same cases.
 
 ### Model selection
+The conclusions of the model selection can be found in the [model selection notebook](./notebooks/model_selection.ipynb). Here
+we provide an overview of the approach and the steps performed. 
 #### Hierarchical time series
 Regarding the model selection, and given the time constraints, it has been concluded that the best approach
 -- as well as one the most commonly used approaches for demand forecasting -- is
@@ -88,17 +90,32 @@ In order to choose the train and validation data, a forward validation is perfor
 
 Figure 2. *Forward cross-validation for time series*
 
-In our case, the first fold consists on using 50% of the **dates** for the train set and then the **next 90 days** as the validation
-set. The next fold uses the 50% of the dates plus the data corresponding to the validation set in the previous fold, and then
-uses the next 90 days as the validation set. The algorithm continues as follows until no more validation data
-can be used.
+In our case, we perform two folds:
+1. The first one uses all the dates up to 180 days before the last date as the train set and the next 90 days as the validation
+set. 
+2. The second one uses all the dates up to 90 days prior to the last date, and the next 90 days as the validation. 
 
 Once the validation process is complete, the scores are plotted in a box diagram. The metric used in this project has been
 the *[mean absolute scaled error (MASE)](https://en.wikipedia.org/wiki/Mean_absolute_scaled_error)* [1]. This consists on dividing
 the *mean absolute error (MAE)* of the model by the MAE of the naive model -- that is, the model that
 at time *t* uses the last available observation as a prediction -- in our case the last 90 days. 
 
-## References
+### Future improvements
+#### Use of exogeneous variables
+One of the main issues encountered with the hierarchical forecasting methodology is that the munging process for exogeneous
+variables is slightly different from the standard, supervised ML data-frame format, and so due to time constraints
+it has not been possible to add exogeneous variables -- such as whether the day is a weekend, separating the day into different phases,
+adding individual properties of each user, etc. This would have been much easier using a standard ML algorithm, where each entry
+corresponds to a time, user_id, the value of the target variable at that time, the lags of that variable, and properties 
+dependent on the user. 
+#### Other ML models
+As explained above, large companies usually generate a data-frame as the one explained in the last sub-section, 
+and feed it directly into a large neural network. In the future we would like to compare the results with our model. 
+
+### Business applications
+
+
+### References
 [1]: *Hyndman, R. J.* (2006). "Another look at measures of forecast accuracy", FORESIGHT - Issue 4, June 2006.
 
 [2]: *Hyndman, R. J. & Lee, A. & Earo, W.* (2016) "Fast computation of reconciled forecasts for hierarchical and grouped time series." - Computational Statistics and Data Analysis 97, 16-32.
