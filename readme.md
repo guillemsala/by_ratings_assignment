@@ -14,13 +14,13 @@ The analysis can be done either in Python or R, although the first is preferred.
 
 [X] Design of the training and evaluation procedures to build the predictive model 
 
-[ ] ETL and feature engineering to build the tables that will be used as input to the predictive model
+[X] ETL and feature engineering to build the tables that will be used as input to the predictive model
 
 [X] Implementation in a production scenario
 
 [X] Performance evaluation metrics and baselines to be considered
 
-[ ] Business case
+[X] Business case
 
 The provided dataset includes two tables:
 - User table (“sds_users.csv”): All the information contained in this table is generated when the users are registered/created.
@@ -113,6 +113,10 @@ As explained above, large companies usually generate a data-frame as the one exp
 and feed it directly into a large neural network. In the future we would like to compare the results with our model. 
 
 ### Business applications
+One of the main applications of this forecasting algorithm -- that is, the quarterly monetary value of each user -- can 
+be used by the involved company to anticipate the profit for the next quarter. In addition to this, the model can also
+be used to allocate more or less assets on each of the locations provided, as well as the possibility of offering
+discounts to each user to boost purchases. 
 
 
 ### References
