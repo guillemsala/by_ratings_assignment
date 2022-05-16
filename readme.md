@@ -46,4 +46,54 @@ The provided dataset includes two tables:
   - product: Purchased product categorization (code)
 
 ### Exploratory data analysis
-The outcome of the EDA can be found [here](./notebooks/eda.ipynb). 
+A more exhaustive explanation of the outcomes of the EDA can be found in the [EDA notebook](./notebooks/eda.ipynb). 
+However, here we indicate some of the most relevant observations:
+1. Regarding the **purchases** data-frame, 
+   1. it was not possible to reach any conclusion regarding the co-dependency
+   of purchasing the first product on the second, and vice-versa. 
+2. Regarding the **users** data-frame,
+   1. Some birth-years went as low as 1700 and beyond 2022 up to more than 2200. These cases
+   were removed
+   2. The gender is almost never revealed in the data. 
+   3. origin_2 and utm_cpg are missing in most occasions.
+   4. utm_src and utm_med are missing in the exact same cases.
+
+### Model selection
+#### Hierarchical time series
+Regarding the model selection, and given the time constraints, it has been concluded that the best approach
+-- as well as one the most commonly used approaches for demand forecasting -- is
+[hierarchical time series forecasting](https://otexts.com/fpp3/hierarchical.html).
+
+![](https://www.researchgate.net/profile/Evangelos-Spiliotis/publication/344802492/figure/fig3/AS:949277576683521@1603336819604/Hierarchical-structure-of-the-time-series-included-in-the-examined-dataset.ppm "Logo Title Text 1")
+Figure 1. *Example of a hierarchical time series*
+
+Other large companies simply create a large (sometimes recurrent) neural network and, using a massive amount of computation power, make the predictions.
+However, these approaches are usually very slow, and as mentioned above, are very computationally expensive, as these models
+attempt to find latent connections (e.g, hierarchies) which, in the case above are provided *a priori*.
+
+In our case, the model makes predictions for the bottom layers, and then uses the [variance weighted least squares
+(WLS)](https://scikit-hts.readthedocs.io/en/latest/hts.html#hts.functions.optimal_combination) reconciliation method [2] to account for the
+interactions within the hierarchies. All of this is implemented using the [sci-kit HTS](https://scikit-hts.readthedocs.io/en/latest/)
+package, and is known to be the *state-of-the-art* in demand forecasting, outside neural network approaches.
+
+#### Train and validation dataset construction
+In order to choose the train and validation data, a forward validation is performed:
+
+![](https://miro.medium.com/max/1204/1*qvdnPF8ETV9mFdMT0Y_BBA.png)
+
+Figure 2. *Forward cross-validation for time series*
+
+In our case, the first fold consists on using 50% of the **dates** for the train set and then the **next 90 days** as the validation
+set. The next fold uses the 50% of the dates plus the data corresponding to the validation set in the previous fold, and then
+uses the next 90 days as the validation set. The algorithm continues as follows until no more validation data
+can be used.
+
+Once the validation process is complete, the scores are plotted in a box diagram. The metric used in this project has been
+the *[mean absolute scaled error (MASE)](https://en.wikipedia.org/wiki/Mean_absolute_scaled_error)* [1]. This consists on dividing
+the *mean absolute error (MAE)* of the model by the MAE of the naive model -- that is, the model that
+at time *t* uses the last available observation as a prediction -- in our case the last 90 days. 
+
+## References
+[1]: *Hyndman, R. J.* (2006). "Another look at measures of forecast accuracy", FORESIGHT - Issue 4, June 2006.
+
+[2]: *Hyndman, R. J. & Lee, A. & Earo, W.* (2016) "Fast computation of reconciled forecasts for hierarchical and grouped time series." - Computational Statistics and Data Analysis 97, 16-32.
