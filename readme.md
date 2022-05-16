@@ -105,6 +105,16 @@ the *[mean absolute scaled error (MASE)](https://en.wikipedia.org/wiki/Mean_abso
 the *mean absolute error (MAE)* of the model by the MAE of the naive model -- that is, the model that
 at time *t* uses the last available observation as a prediction -- in our case the last 90 days. 
 
+#### Results 
+Unfortunately, it is observed that the "naive" model mentioned above produces better predictions than the 
+described model, as it can be observed in the table below. 
+
+|           | fold number 1       | fold number 2       | fold number 3       |
+|-----------|---------------------|---------------------|---------------------|
+| model_mae | 0.2341037136404589  | 0.2835173191531006  | 0.22755480206155027 |
+| naive_mae | 0.19732806972366854 | 0.23850732871535432 | 0.18888901158109067 |
+
+In this case, and until a better model is found, the naive model would be chosen for the predictions. 
 ### Future improvements
 #### Use of exogeneous variables
 One of the main issues encountered with the hierarchical forecasting methodology is that the munging process for exogeneous
